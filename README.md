@@ -21,6 +21,8 @@ A player that is frozen will also be sent 'fake' potion effects depending on con
 blindness and mining fatigue. When they are unfrozen these potion effects are removed and any overwritten potion effects 
 are sent back to the player.
 
+Players with `uhc.freeze.antifreeze` (default op) will be unaffected by freeze commands
+
 # Commands
 
 ## `/ff <name> [on|off]`

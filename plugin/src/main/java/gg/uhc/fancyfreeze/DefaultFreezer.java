@@ -27,6 +27,8 @@ import java.util.UUID;
 
 public class DefaultFreezer implements Freezer {
 
+    public static final String ANTIFREEZE = "uhc.freeze.antifreeze";
+
     protected static final String METADATA_KEY = "freeze location";
     protected static final String STAY_IN_BORDER = ChatColor.RED + "Stay close to your freeze position!";
 
@@ -217,6 +219,8 @@ public class DefaultFreezer implements Freezer {
     }
 
     protected void freezePlayer(Player player) {
+        if (player.hasPermission(ANTIFREEZE)) return;
+
         setFreezeLocation(player, player.getLocation());
         movementspeedRemover.applyReduction(player);
         potionApplier.addPotions(player);

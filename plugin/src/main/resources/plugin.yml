@@ -16,3 +16,6 @@ permissions:
   uhc.freeze.command.global:
     description: usage of the /ffg command
     default: op
+  uhc.freeze.antifreeze:
+    description: player will not be frozen in /ff or /ffg
+    default: op
