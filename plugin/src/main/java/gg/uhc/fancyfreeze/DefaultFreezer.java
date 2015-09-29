@@ -250,9 +250,9 @@ public class DefaultFreezer implements Freezer {
     }
 
     protected void warpPlayerBack(Player player, Location location) {
+        warpEffect.playAtLocation(player.getEyeLocation(), player);
         player.teleport(location.clone().setDirection(player.getLocation().getDirection()));
         player.sendMessage(ChatColor.RED + "Stay within the boundary");
-        warpEffect.playAtLocation(player.getLocation(), player);
     }
 
     protected void startParticleSpawning(UUID uuid, Location centre) {
