@@ -195,6 +195,7 @@ public class DefaultFreezer implements Freezer {
                 // set new location and reset particles
                 setFreezeLocation(player, event.getTo());
                 startParticleSpawning(player, event.getTo());
+                potionApplier.addPotions(player);
         }
     }
 
