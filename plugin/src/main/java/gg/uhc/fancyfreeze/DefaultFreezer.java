@@ -1,20 +1,23 @@
 package gg.uhc.fancyfreeze;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import gg.uhc.fancyfreeze.api.nms.FakePotionApplier;
-import gg.uhc.fancyfreeze.api.Freezer;
-import gg.uhc.fancyfreeze.api.nms.MovementspeedRemover;
 import gg.uhc.fancyfreeze.api.CustomParticleEffect;
+import gg.uhc.fancyfreeze.api.Freezer;
+import gg.uhc.fancyfreeze.api.nms.FakePotionApplier;
+import gg.uhc.fancyfreeze.api.nms.MovementspeedRemover;
 import gg.uhc.fancyfreeze.particles.FixedLocationEffectRunnable;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
@@ -183,8 +186,49 @@ public class DefaultFreezer implements Freezer {
         stopParticleSpawning(event.getPlayer().getUniqueId());
     }
 
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void on(PlayerTeleportEvent event) {
+        if (!isCurrentlyFrozen(event.getPlayer().getUniqueId())) return;
+
+        Player player = event.getPlayer();
+
+        System.out.println(String.format("TO: %s FROM: %s CAUSE: %s", event.getTo(), event.getFrom(), event.getCause()));
+
+        switch (event.getCause()) {
+            case PLUGIN:
+                // skip if it was to the same location as currently set, stops
+                // resetting particles/metadata on border knockback
+                if (event.getTo().equals(getFreezeLocation(player).get())) return;
+            case COMMAND:
+            case UNKNOWN:
+                // set new location and reset particles
+                setFreezeLocation(player, event.getTo());
+                startParticleSpawning(player.getUniqueId(), event.getTo());
+        }
+    }
+
+    protected Optional<Location> getFreezeLocation(Player player) {
+        List<MetadataValue> meta = player.getMetadata(METADATA_KEY);
+
+        if (meta.size() == 0) return Optional.absent();
+
+        for (MetadataValue value : meta) {
+            if (value.getOwningPlugin().equals(plugin)) return Optional.fromNullable((Location) value.value());
+        }
+
+        return Optional.absent();
+    }
+
+    protected void setFreezeLocation(Player player, Location location) {
+        player.setMetadata(METADATA_KEY, new FixedMetadataValue(plugin, location));
+    }
+
+    protected void removeFreezeLocation(Player player) {
+        player.removeMetadata(METADATA_KEY, plugin);
+    }
+
     protected void freezePlayer(Player player) {
-        player.setMetadata(METADATA_KEY, new FixedMetadataValue(plugin, player.getLocation()));
+        setFreezeLocation(player, player.getLocation());
         movementspeedRemover.applyReduction(player);
 
         for (PotionEffect effect : freezeEffects) {
@@ -195,7 +239,7 @@ public class DefaultFreezer implements Freezer {
     }
 
     protected void unfreezePlayer(Player player) {
-        player.removeMetadata(METADATA_KEY, plugin);
+        removeFreezeLocation(player);
         movementspeedRemover.removeReduction(player);
 
         for (PotionEffect effect : freezeEffects) {
