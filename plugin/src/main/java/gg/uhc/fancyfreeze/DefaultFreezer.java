@@ -28,6 +28,7 @@ import java.util.UUID;
 public class DefaultFreezer implements Freezer {
 
     protected static final String METADATA_KEY = "freeze location";
+    protected static final String STAY_IN_BORDER = ChatColor.RED + "Stay close to your freeze position!";
 
     protected final Plugin plugin;
     protected final FreezePotionsApplier potionApplier;
@@ -232,7 +233,7 @@ public class DefaultFreezer implements Freezer {
     protected void warpPlayerBack(Player player, Location location) {
         warpEffect.playAtLocation(player.getEyeLocation(), player);
         player.teleport(location.clone().setDirection(player.getLocation().getDirection()));
-        player.sendMessage(ChatColor.RED + "Stay within the boundary");
+        player.sendMessage(STAY_IN_BORDER);
     }
 
     protected void startParticleSpawning(Player player, Location centre) {
