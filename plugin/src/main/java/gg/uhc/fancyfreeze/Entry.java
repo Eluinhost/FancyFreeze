@@ -1,12 +1,15 @@
 package gg.uhc.fancyfreeze;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import gg.uhc.fancyfreeze.api.CustomEffect;
 import gg.uhc.fancyfreeze.api.Freezer;
 import gg.uhc.fancyfreeze.api.NMSHandler;
+import gg.uhc.fancyfreeze.api.nms.MovementspeedRemover;
 import gg.uhc.fancyfreeze.commands.FreezeCommand;
 import gg.uhc.fancyfreeze.commands.GlobalFreezeCommand;
 import gg.uhc.fancyfreeze.effects.ColouredDustParticleEffect;
+import gg.uhc.fancyfreeze.effects.DummyEffect;
 import gg.uhc.fancyfreeze.effects.ParticleEffect;
 import gg.uhc.fancyfreeze.effects.SoundEffect;
 import gg.uhc.fancyfreeze.effects.wrappers.CombinationEffect;
@@ -18,6 +21,7 @@ import gg.uhc.fancyfreeze.listeners.PortalListener;
 import gg.uhc.fancyfreeze.listeners.PotionListener;
 import org.bukkit.Effect;
 import org.bukkit.Sound;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -32,12 +36,6 @@ public class Entry extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        double maxDistance = 3D;
-
-        CustomEffect dust = new ColouredDustParticleEffect(190, 240, 250, 30);
-        CustomEffect ring = new RingEffect(dust, maxDistance, 50);
-        CustomEffect frozenEffect = new VerticalSpreadEffect(ring, 4D, 6, -.5D);
-
         NMSHandler handler = getNMSHandler();
 
         if (handler == null) {
@@ -46,20 +44,56 @@ public class Entry extends JavaPlugin {
             return;
         }
 
-        List<PotionEffect> freezePotions = ImmutableList.<PotionEffect>builder()
-                .add(new PotionEffect(PotionEffectType.JUMP, Short.MAX_VALUE, -Byte.MAX_VALUE))
-                .add(new PotionEffect(PotionEffectType.SLOW, Short.MAX_VALUE, Byte.MAX_VALUE))
-                .add(new PotionEffect(PotionEffectType.SLOW_DIGGING, Short.MAX_VALUE, 5))
-                .build();
+        FileConfiguration configuration = getConfig();
+        configuration.options().copyDefaults(true);
+        saveConfig();
 
-        FreezePotionsApplier potionsApplier = new FreezePotionsApplier(handler.getFakePotionApplier(), freezePotions);
+        MovementspeedRemover movementspeedRemover;
+        List<PotionEffect> effects = Lists.newArrayList();
 
-        CustomEffect warpParticle = new ParticleEffect(Effect.VILLAGER_THUNDERCLOUD, 0, 0, 1, 1, 1, 0, 10, 30);
-        CustomEffect warpSound = new SoundEffect(Sound.ANVIL_LAND, 1, 0);
-        CustomEffect warpEffect = new CombinationEffect(warpParticle, warpSound);
+        if (configuration.getBoolean("remove movement speed")) {
+            movementspeedRemover = handler.getMovementspeedRemover();
+            effects.add(new PotionEffect(PotionEffectType.SLOW, Short.MAX_VALUE, 5));
+        } else {
+            movementspeedRemover = new DummyMovementspeedRemover();
+        }
 
-        freezer = new DefaultFreezer(this, potionsApplier, handler.getMovementspeedRemover(), frozenEffect, warpEffect, maxDistance);
+        if (configuration.getBoolean("remove jumping")) {
+            effects.add(new PotionEffect(PotionEffectType.JUMP, Short.MAX_VALUE, -Byte.MAX_VALUE));
+        }
 
+        if (configuration.getBoolean("add mining fatigue")) {
+            effects.add(new PotionEffect(PotionEffectType.SLOW_DIGGING, Short.MAX_VALUE, 5));
+        }
+
+        if (configuration.getBoolean("add blindness")) {
+            effects.add(new PotionEffect(PotionEffectType.BLINDNESS, Short.MAX_VALUE, 5));
+        }
+
+        double maxDistance = configuration.getDouble("max distance");
+
+        FreezePotionsApplier potionsApplier = new FreezePotionsApplier(handler.getFakePotionApplier(), effects);
+
+        // setup particle effects
+        CustomEffect frozenEffect;
+        CustomEffect warpEffect;
+
+        if (configuration.getBoolean("use particles")) {
+            CustomEffect dust = new ColouredDustParticleEffect(190, 240, 250, 30);
+            CustomEffect ring = new RingEffect(dust, maxDistance, 50);
+            frozenEffect = new VerticalSpreadEffect(ring, 4D, 6, -.5D);
+
+            CustomEffect warpParticle = new ParticleEffect(Effect.VILLAGER_THUNDERCLOUD, 0, 0, 1, 1, 1, 0, 10, 30);
+            CustomEffect warpSound = new SoundEffect(Sound.ANVIL_LAND, 1, 0);
+            warpEffect = new CombinationEffect(warpParticle, warpSound);
+        } else {
+            frozenEffect = new DummyEffect();
+            warpEffect = frozenEffect;
+        }
+
+        freezer = new DefaultFreezer(this, potionsApplier, movementspeedRemover, frozenEffect, warpEffect, maxDistance);
+
+        // register listeners
         List<Listener> listeners = ImmutableList.<Listener>builder()
                 .add(freezer)
                 .add(new PotionListener(freezer))
@@ -73,6 +107,7 @@ public class Entry extends JavaPlugin {
             manager.registerEvents(listener, this);
         }
 
+        // register commands
         getCommand("ff").setExecutor(new FreezeCommand(freezer));
         getCommand("ffg").setExecutor(new GlobalFreezeCommand(freezer));
     }

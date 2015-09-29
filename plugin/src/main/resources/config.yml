@@ -1,0 +1,6 @@
+remove jumping: true
+remove movement speed: false
+add mining fatigue: true
+add blindness: false
+use particles: true
+max distance: 5
