@@ -14,10 +14,12 @@ The player will be surrounded by fancy particles:
 
 [Preview](http://gfycat.com/VictoriousBelovedAndalusianhorse)
 
-Stepping outside of the boundary will teleport the player back to the initial freeze location.
+Stepping outside of the boundary will teleport the player back to the initial freeze location with some more particle
+effects. All particle effects are only visible to the player that is frozen.
 
-A player that is frozen will also be sent 'fake' potion effects: slowness, jump boost and mining fatigue. When they are
-unfrozen these potion effects are removed and any overwritten potion effects are sent back to the player.
+A player that is frozen will also be sent 'fake' potion effects depending on configuration: slowness, jump boost, 
+blindness and mining fatigue. When they are unfrozen these potion effects are removed and any overwritten potion effects 
+are sent back to the player.
 
 # Commands
 
@@ -39,3 +41,27 @@ Permission: `uhc.freeze.command.player` default OP
 Sets global freeze on/off. If on/off is not supplied it will toggle instead. All players are frozen + any new logins.
 
 Permission: `uhc.freeze.command.global` default OP
+
+# Configuration
+
+```yaml
+remove jumping: true
+remove movement speed: false
+add mining fatigue: true
+add blindness: false
+use particles: true
+max distance: 5
+```
+
+`remove jumping` whether to send fake jump potion effect to disable jumping
+
+`remove movement speed` whether to send fake slow potion effect to disable jumping
+
+`add mining fatigue` whether to send fake mining fatigue potion effect. NOTE block breaking is already cancelled, this 
+is a visual setting
+
+`add blindness` whether to send fake blindness effect
+
+`use particles` whether to render particles to players
+
+`max distance` the distance before warping back to freeze location + how far out to render particles
