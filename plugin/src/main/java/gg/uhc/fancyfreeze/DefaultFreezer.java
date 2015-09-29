@@ -51,7 +51,7 @@ public class DefaultFreezer implements Freezer {
         this.maxDistanceSq = maxDistance * maxDistance;
 
         // start timer that keeps people in their boundaries
-        new LocationResetterTask().runTaskTimer(plugin, 0, 40);
+        new LocationResetterTask().runTaskTimer(plugin, 0, 20);
     }
 
     @Override
