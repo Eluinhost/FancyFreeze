@@ -232,7 +232,17 @@ public class DefaultFreezer implements Freezer {
 
     protected void warpPlayerBack(Player player, Location location) {
         warpEffect.playAtLocation(player.getEyeLocation(), player);
-        player.teleport(location.clone().setDirection(player.getLocation().getDirection()));
+        Location newLocation = location.clone();
+
+        Location playerLocation = player.getLocation();
+        double dX = playerLocation.getX() - location.getX();
+        double dZ = playerLocation.getZ() - location.getZ();
+        double theta = Math.atan2(-dX, dZ);
+
+        newLocation.setYaw((float)Math.toDegrees((theta + 6.283185307179586D) % 6.283185307179586D));
+        newLocation.setPitch(playerLocation.getPitch());
+
+        player.teleport(newLocation);
         player.sendMessage(STAY_IN_BORDER);
     }
 
