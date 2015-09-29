@@ -6,7 +6,7 @@ import com.google.common.collect.Sets;
 import gg.uhc.fancyfreeze.api.CustomEffect;
 import gg.uhc.fancyfreeze.api.Freezer;
 import gg.uhc.fancyfreeze.api.nms.MovementspeedRemover;
-import gg.uhc.fancyfreeze.effects.tasks.FixedLocationEffectRunnable;
+import gg.uhc.fancyfreeze.effects.tasks.XZLocationEffectRunnable;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -37,7 +37,7 @@ public class DefaultFreezer implements Freezer {
     protected final MovementspeedRemover movementspeedRemover;
 
     protected final Set<UUID> alwaysFrozen = Sets.newHashSet();
-    protected final Map<UUID, FixedLocationEffectRunnable> particleSpawners = Maps.newHashMap();
+    protected final Map<UUID, BukkitRunnable> particleSpawners = Maps.newHashMap();
     protected final double maxDistanceSq;
 
     protected boolean globallyFrozen = false;
@@ -174,7 +174,7 @@ public class DefaultFreezer implements Freezer {
 
     @EventHandler
     public void on(PlayerQuitEvent event) {
-        stopParticleSpawning(event.getPlayer().getUniqueId());
+        stopParticleSpawning(event.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -192,7 +192,7 @@ public class DefaultFreezer implements Freezer {
             case UNKNOWN:
                 // set new location and reset particles
                 setFreezeLocation(player, event.getTo());
-                startParticleSpawning(player.getUniqueId(), event.getTo());
+                startParticleSpawning(player, event.getTo());
         }
     }
 
@@ -220,14 +220,14 @@ public class DefaultFreezer implements Freezer {
         setFreezeLocation(player, player.getLocation());
         movementspeedRemover.applyReduction(player);
         potionApplier.addPotions(player);
-        startParticleSpawning(player.getUniqueId(), player.getLocation());
+        startParticleSpawning(player, player.getLocation());
     }
 
     protected void unfreezePlayer(Player player) {
         removeFreezeLocation(player);
         movementspeedRemover.removeReduction(player);
         potionApplier.removePotions(player);
-        stopParticleSpawning(player.getUniqueId());
+        stopParticleSpawning(player);
     }
 
     protected void warpPlayerBack(Player player, Location location) {
@@ -236,17 +236,17 @@ public class DefaultFreezer implements Freezer {
         player.sendMessage(ChatColor.RED + "Stay within the boundary");
     }
 
-    protected void startParticleSpawning(UUID uuid, Location centre) {
-        stopParticleSpawning(uuid);
+    protected void startParticleSpawning(Player player, Location centre) {
+        stopParticleSpawning(player);
 
-        FixedLocationEffectRunnable spawner = new FixedLocationEffectRunnable(freezeEffect, centre);
+        BukkitRunnable spawner = new XZLocationEffectRunnable(freezeEffect, player, centre);
         spawner.runTaskTimerAsynchronously(plugin, 0, 20);
 
-        particleSpawners.put(uuid, spawner);
+        particleSpawners.put(player.getUniqueId(), spawner);
     }
 
-    protected void stopParticleSpawning(UUID uuid) {
-        FixedLocationEffectRunnable runnable = particleSpawners.remove(uuid);
+    protected void stopParticleSpawning(Player player) {
+        BukkitRunnable runnable = particleSpawners.remove(player.getUniqueId());
 
         if (runnable != null) {
             runnable.cancel();
