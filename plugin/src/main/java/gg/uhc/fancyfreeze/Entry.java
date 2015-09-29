@@ -21,6 +21,8 @@ import org.bukkit.Sound;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
 
@@ -44,11 +46,19 @@ public class Entry extends JavaPlugin {
             return;
         }
 
+        List<PotionEffect> freezePotions = ImmutableList.<PotionEffect>builder()
+                .add(new PotionEffect(PotionEffectType.JUMP, Short.MAX_VALUE, -Byte.MAX_VALUE))
+                .add(new PotionEffect(PotionEffectType.SLOW, Short.MAX_VALUE, Byte.MAX_VALUE))
+                .add(new PotionEffect(PotionEffectType.SLOW_DIGGING, Short.MAX_VALUE, 5))
+                .build();
+
+        FreezePotionsApplier potionsApplier = new FreezePotionsApplier(handler.getFakePotionApplier(), freezePotions);
+
         CustomEffect warpParticle = new ParticleEffect(Effect.VILLAGER_THUNDERCLOUD, 0, 0, 1, 1, 1, 0, 10, 30);
         CustomEffect warpSound = new SoundEffect(Sound.ANVIL_LAND, 1, 0);
         CustomEffect warpEffect = new CombinationEffect(warpParticle, warpSound);
 
-        freezer = new DefaultFreezer(this, handler.getFakePotionApplier(), handler.getMovementspeedRemover(), frozenEffect, warpEffect, maxDistance);
+        freezer = new DefaultFreezer(this, potionsApplier, handler.getMovementspeedRemover(), frozenEffect, warpEffect, maxDistance);
 
         List<Listener> listeners = ImmutableList.<Listener>builder()
                 .add(freezer)

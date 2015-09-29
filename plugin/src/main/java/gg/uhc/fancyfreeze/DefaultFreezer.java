@@ -1,12 +1,10 @@
 package gg.uhc.fancyfreeze;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import gg.uhc.fancyfreeze.api.CustomEffect;
 import gg.uhc.fancyfreeze.api.Freezer;
-import gg.uhc.fancyfreeze.api.nms.FakePotionApplier;
 import gg.uhc.fancyfreeze.api.nms.MovementspeedRemover;
 import gg.uhc.fancyfreeze.effects.tasks.FixedLocationEffectRunnable;
 import net.md_5.bungee.api.ChatColor;
@@ -21,8 +19,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
@@ -35,31 +31,24 @@ public class DefaultFreezer implements Freezer {
     protected static final String METADATA_KEY = "freeze location";
 
     protected final Plugin plugin;
-    protected final FakePotionApplier potionApplier;
+    protected final FreezePotionsApplier potionApplier;
     protected final CustomEffect freezeEffect;
     protected final CustomEffect warpEffect;
     protected final MovementspeedRemover movementspeedRemover;
 
     protected final Set<UUID> alwaysFrozen = Sets.newHashSet();
     protected final Map<UUID, FixedLocationEffectRunnable> particleSpawners = Maps.newHashMap();
-    protected final List<PotionEffect> freezeEffects;
     protected final double maxDistanceSq;
 
     protected boolean globallyFrozen = false;
 
-    public DefaultFreezer(Plugin plugin, FakePotionApplier potionApplier, MovementspeedRemover movementspeedRemover, CustomEffect freezeEffect, CustomEffect warpEffect, double maxDistance) {
+    public DefaultFreezer(Plugin plugin, FreezePotionsApplier potionApplier, MovementspeedRemover movementspeedRemover, CustomEffect freezeEffect, CustomEffect warpEffect, double maxDistance) {
         this.plugin = plugin;
         this.movementspeedRemover = movementspeedRemover;
         this.freezeEffect = freezeEffect;
         this.potionApplier = potionApplier;
         this.warpEffect = warpEffect;
         this.maxDistanceSq = maxDistance * maxDistance;
-
-        freezeEffects = ImmutableList.<PotionEffect>builder()
-                .add(new PotionEffect(PotionEffectType.JUMP, Short.MAX_VALUE, -Byte.MAX_VALUE))
-                .add(new PotionEffect(PotionEffectType.SLOW, Short.MAX_VALUE, Byte.MAX_VALUE))
-                .add(new PotionEffect(PotionEffectType.SLOW_DIGGING, Short.MAX_VALUE, 5))
-                .build();
 
         // start timer that keeps people in their boundaries
         new LocationResetterTask().runTaskTimer(plugin, 0, 40);
@@ -230,22 +219,14 @@ public class DefaultFreezer implements Freezer {
     protected void freezePlayer(Player player) {
         setFreezeLocation(player, player.getLocation());
         movementspeedRemover.applyReduction(player);
-
-        for (PotionEffect effect : freezeEffects) {
-            potionApplier.addFakePotionEffect(player, effect);
-        }
-
+        potionApplier.addPotions(player);
         startParticleSpawning(player.getUniqueId(), player.getLocation());
     }
 
     protected void unfreezePlayer(Player player) {
         removeFreezeLocation(player);
         movementspeedRemover.removeReduction(player);
-
-        for (PotionEffect effect : freezeEffects) {
-            potionApplier.removeFakePotionEffect(player, effect);
-        }
-
+        potionApplier.removePotions(player);
         stopParticleSpawning(player.getUniqueId());
     }
 
