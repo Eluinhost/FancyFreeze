@@ -6,7 +6,6 @@ import com.google.common.collect.Sets;
 import gg.uhc.fancyfreeze.api.CustomEffect;
 import gg.uhc.fancyfreeze.api.Freezer;
 import gg.uhc.fancyfreeze.api.nms.MovementspeedRemover;
-import gg.uhc.fancyfreeze.effects.tasks.XZLocationEffectRunnable;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -239,7 +238,7 @@ public class DefaultFreezer implements Freezer {
     protected void startParticleSpawning(Player player, Location centre) {
         stopParticleSpawning(player);
 
-        BukkitRunnable spawner = new XZLocationEffectRunnable(freezeEffect, player, centre);
+        BukkitRunnable spawner = new PlayerYTrackedParticles(freezeEffect, player, centre);
         spawner.runTaskTimerAsynchronously(plugin, 0, 20);
 
         particleSpawners.put(player.getUniqueId(), spawner);
@@ -280,6 +279,27 @@ public class DefaultFreezer implements Freezer {
                     warpPlayerBack(player, location);
                 }
             }
+        }
+    }
+
+    static class PlayerYTrackedParticles extends BukkitRunnable {
+
+        protected final CustomEffect particleEffect;
+        protected final Player player;
+        protected final Location location;
+
+        public PlayerYTrackedParticles(CustomEffect particleEffect, Player player, Location location) {
+            this.particleEffect = particleEffect;
+            this.player = player;
+            this.location = location;
+        }
+
+        @Override
+        public void run() {
+            Location at = location.clone();
+            at.setY(player.getLocation().getY());
+
+            particleEffect.playAtLocation(at, player);
         }
     }
 }
