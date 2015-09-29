@@ -1,4 +1,4 @@
 FancyFreeze
 ===========
 
-![Preview](/images/animation.webm)
+[Preview](http://gfycat.com/VictoriousBelovedAndalusianhorse)
