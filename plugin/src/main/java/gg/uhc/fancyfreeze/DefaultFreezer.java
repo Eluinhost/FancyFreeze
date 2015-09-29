@@ -202,8 +202,6 @@ public class DefaultFreezer implements Freezer {
     protected Optional<Location> getFreezeLocation(Player player) {
         List<MetadataValue> meta = player.getMetadata(METADATA_KEY);
 
-        if (meta.size() == 0) return Optional.absent();
-
         for (MetadataValue value : meta) {
             if (value.getOwningPlugin().equals(plugin)) return Optional.fromNullable((Location) value.value());
         }
@@ -272,15 +270,11 @@ public class DefaultFreezer implements Freezer {
         @Override
         public void run() {
             for (Player player : getOnlineFrozenPlayers()) {
-                List<MetadataValue> data = player.getMetadata(METADATA_KEY);
+                Optional<Location> locationOptional = getFreezeLocation(player);
 
-                if (data.size() == 0) continue;
+                if (!locationOptional.isPresent()) continue;
 
-                Object locationObject = data.get(0).value();
-
-                if (!(locationObject instanceof Location)) continue;
-
-                Location location = (Location) locationObject;
+                Location location = locationOptional.get();
                 Location playerLocation = player.getLocation();
 
                 UUID locationWorldUUID = location.getWorld().getUID();
