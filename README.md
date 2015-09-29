@@ -57,10 +57,10 @@ max distance: 5
 
 `remove jumping` whether to send fake jump potion effect to disable jumping
 
-`remove movement speed` whether to send fake slow potion effect to disable jumping
+`remove movement speed` whether to send fake slow potion effect and will have their movement speed set to 0 server side
 
 `add mining fatigue` whether to send fake mining fatigue potion effect. NOTE block breaking is already cancelled, this 
-is a visual setting
+is a client visual thing
 
 `add blindness` whether to send fake blindness effect
 
