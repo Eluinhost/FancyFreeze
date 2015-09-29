@@ -1,6 +1,6 @@
-package gg.uhc.fancyfreeze.particles;
+package gg.uhc.fancyfreeze.effects.tasks;
 
-import gg.uhc.fancyfreeze.api.CustomParticleEffect;
+import gg.uhc.fancyfreeze.api.CustomEffect;
 import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -8,10 +8,10 @@ import java.lang.ref.WeakReference;
 
 public class EntityLocationEffectRunnable extends BukkitRunnable {
 
-    protected final CustomParticleEffect particleEffect;
+    protected final CustomEffect particleEffect;
     protected final WeakReference<Entity> reference;
 
-    public EntityLocationEffectRunnable(CustomParticleEffect particleEffect, Entity entity) {
+    public EntityLocationEffectRunnable(CustomEffect particleEffect, Entity entity) {
         this.particleEffect = particleEffect;
         this.reference = new WeakReference<>(entity);
     }

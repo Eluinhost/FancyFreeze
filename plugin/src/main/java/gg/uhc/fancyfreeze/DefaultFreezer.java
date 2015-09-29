@@ -4,11 +4,11 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import gg.uhc.fancyfreeze.api.CustomParticleEffect;
+import gg.uhc.fancyfreeze.api.CustomEffect;
 import gg.uhc.fancyfreeze.api.Freezer;
 import gg.uhc.fancyfreeze.api.nms.FakePotionApplier;
 import gg.uhc.fancyfreeze.api.nms.MovementspeedRemover;
-import gg.uhc.fancyfreeze.particles.FixedLocationEffectRunnable;
+import gg.uhc.fancyfreeze.effects.tasks.FixedLocationEffectRunnable;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -36,8 +36,8 @@ public class DefaultFreezer implements Freezer {
 
     protected final Plugin plugin;
     protected final FakePotionApplier potionApplier;
-    protected final CustomParticleEffect freezeEffect;
-    protected final CustomParticleEffect warpEffect;
+    protected final CustomEffect freezeEffect;
+    protected final CustomEffect warpEffect;
     protected final MovementspeedRemover movementspeedRemover;
 
     protected final Set<UUID> alwaysFrozen = Sets.newHashSet();
@@ -47,7 +47,7 @@ public class DefaultFreezer implements Freezer {
 
     protected boolean globallyFrozen = false;
 
-    public DefaultFreezer(Plugin plugin, FakePotionApplier potionApplier, MovementspeedRemover movementspeedRemover, CustomParticleEffect freezeEffect, CustomParticleEffect warpEffect, double maxDistance) {
+    public DefaultFreezer(Plugin plugin, FakePotionApplier potionApplier, MovementspeedRemover movementspeedRemover, CustomEffect freezeEffect, CustomEffect warpEffect, double maxDistance) {
         this.plugin = plugin;
         this.movementspeedRemover = movementspeedRemover;
         this.freezeEffect = freezeEffect;

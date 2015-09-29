@@ -1,7 +1,7 @@
 package gg.uhc.fancyfreeze;
 
 import com.google.common.collect.ImmutableList;
-import gg.uhc.fancyfreeze.api.CustomParticleEffect;
+import gg.uhc.fancyfreeze.api.CustomEffect;
 import gg.uhc.fancyfreeze.api.Freezer;
 import gg.uhc.fancyfreeze.api.NMSHandler;
 import gg.uhc.fancyfreeze.commands.FreezeCommand;
@@ -10,10 +10,10 @@ import gg.uhc.fancyfreeze.listeners.DamageListener;
 import gg.uhc.fancyfreeze.listeners.InteractListeners;
 import gg.uhc.fancyfreeze.listeners.PortalListener;
 import gg.uhc.fancyfreeze.listeners.PotionListener;
-import gg.uhc.fancyfreeze.particles.ColouredDustParticleEffect;
-import gg.uhc.fancyfreeze.particles.RingParticleEffect;
-import gg.uhc.fancyfreeze.particles.SoundEffect;
-import gg.uhc.fancyfreeze.particles.VerticalSpreadParticleEffect;
+import gg.uhc.fancyfreeze.effects.ColouredDustParticleEffect;
+import gg.uhc.fancyfreeze.effects.wrappers.RingEffect;
+import gg.uhc.fancyfreeze.effects.SoundEffect;
+import gg.uhc.fancyfreeze.effects.wrappers.VerticalSpreadEffect;
 import org.bukkit.Sound;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
@@ -29,9 +29,9 @@ public class Entry extends JavaPlugin {
     public void onEnable() {
         double maxDistance = 3D;
 
-        CustomParticleEffect dust = new ColouredDustParticleEffect(190, 240, 250, 30);
-        CustomParticleEffect ring = new RingParticleEffect(dust, maxDistance, 50);
-        CustomParticleEffect frozenEffect = new VerticalSpreadParticleEffect(ring, 4D, 6, -.5D);
+        CustomEffect dust = new ColouredDustParticleEffect(190, 240, 250, 30);
+        CustomEffect ring = new RingEffect(dust, maxDistance, 50);
+        CustomEffect frozenEffect = new VerticalSpreadEffect(ring, 4D, 6, -.5D);
 
         NMSHandler handler = getNMSHandler();
 
@@ -41,7 +41,7 @@ public class Entry extends JavaPlugin {
             return;
         }
 
-        CustomParticleEffect warpEffect = new SoundEffect(Sound.ANVIL_LAND, 1, 0);
+        CustomEffect warpEffect = new SoundEffect(Sound.ANVIL_LAND, 1, 0);
 
         freezer = new DefaultFreezer(this, handler.getFakePotionApplier(), handler.getMovementspeedRemover(), frozenEffect, warpEffect, maxDistance);
 

@@ -1,11 +1,11 @@
-package gg.uhc.fancyfreeze.particles;
+package gg.uhc.fancyfreeze.effects;
 
-import gg.uhc.fancyfreeze.api.CustomParticleEffect;
+import gg.uhc.fancyfreeze.api.CustomEffect;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-public class SoundEffect implements CustomParticleEffect {
+public class SoundEffect implements CustomEffect {
 
     protected final Sound sound;
     protected final float volume;

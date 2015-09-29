@@ -1,12 +1,12 @@
-package gg.uhc.fancyfreeze.particles;
+package gg.uhc.fancyfreeze.effects;
 
 import com.google.common.base.Preconditions;
-import gg.uhc.fancyfreeze.api.CustomParticleEffect;
+import gg.uhc.fancyfreeze.api.CustomEffect;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-public class ColouredDustParticleEffect implements CustomParticleEffect {
+public class ColouredDustParticleEffect implements CustomEffect {
 
     protected final Effect effect = Effect.COLOURED_DUST;
 

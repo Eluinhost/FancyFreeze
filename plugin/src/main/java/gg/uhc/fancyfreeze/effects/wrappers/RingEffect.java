@@ -1,16 +1,16 @@
-package gg.uhc.fancyfreeze.particles;
+package gg.uhc.fancyfreeze.effects.wrappers;
 
-import gg.uhc.fancyfreeze.api.CustomParticleEffect;
+import gg.uhc.fancyfreeze.api.CustomEffect;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-public class RingParticleEffect implements CustomParticleEffect {
+public class RingEffect implements CustomEffect {
 
-    protected final CustomParticleEffect effect;
+    protected final CustomEffect effect;
     protected final Vector[] ringOffsets;
 
-    public RingParticleEffect(CustomParticleEffect effect, double radius, int pointCount) {
+    public RingEffect(CustomEffect effect, double radius, int pointCount) {
         this.effect = effect;
         this.ringOffsets = generateRingOffsets(radius, pointCount);
     }
