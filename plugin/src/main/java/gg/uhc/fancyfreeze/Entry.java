@@ -6,14 +6,17 @@ import gg.uhc.fancyfreeze.api.Freezer;
 import gg.uhc.fancyfreeze.api.NMSHandler;
 import gg.uhc.fancyfreeze.commands.FreezeCommand;
 import gg.uhc.fancyfreeze.commands.GlobalFreezeCommand;
+import gg.uhc.fancyfreeze.effects.ColouredDustParticleEffect;
+import gg.uhc.fancyfreeze.effects.ParticleEffect;
+import gg.uhc.fancyfreeze.effects.SoundEffect;
+import gg.uhc.fancyfreeze.effects.wrappers.CombinationEffect;
+import gg.uhc.fancyfreeze.effects.wrappers.RingEffect;
+import gg.uhc.fancyfreeze.effects.wrappers.VerticalSpreadEffect;
 import gg.uhc.fancyfreeze.listeners.DamageListener;
 import gg.uhc.fancyfreeze.listeners.InteractListeners;
 import gg.uhc.fancyfreeze.listeners.PortalListener;
 import gg.uhc.fancyfreeze.listeners.PotionListener;
-import gg.uhc.fancyfreeze.effects.ColouredDustParticleEffect;
-import gg.uhc.fancyfreeze.effects.wrappers.RingEffect;
-import gg.uhc.fancyfreeze.effects.SoundEffect;
-import gg.uhc.fancyfreeze.effects.wrappers.VerticalSpreadEffect;
+import org.bukkit.Effect;
 import org.bukkit.Sound;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
@@ -41,7 +44,9 @@ public class Entry extends JavaPlugin {
             return;
         }
 
-        CustomEffect warpEffect = new SoundEffect(Sound.ANVIL_LAND, 1, 0);
+        CustomEffect warpParticle = new ParticleEffect(Effect.VILLAGER_THUNDERCLOUD, 0, 0, 1, 1, 1, 0, 10, 30);
+        CustomEffect warpSound = new SoundEffect(Sound.ANVIL_LAND, 1, 0);
+        CustomEffect warpEffect = new CombinationEffect(warpParticle, warpSound);
 
         freezer = new DefaultFreezer(this, handler.getFakePotionApplier(), handler.getMovementspeedRemover(), frozenEffect, warpEffect, maxDistance);
 
