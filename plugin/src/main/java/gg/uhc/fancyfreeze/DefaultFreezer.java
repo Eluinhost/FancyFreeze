@@ -192,8 +192,6 @@ public class DefaultFreezer implements Freezer {
 
         Player player = event.getPlayer();
 
-        System.out.println(String.format("TO: %s FROM: %s CAUSE: %s", event.getTo(), event.getFrom(), event.getCause()));
-
         switch (event.getCause()) {
             case PLUGIN:
                 // skip if it was to the same location as currently set, stops
