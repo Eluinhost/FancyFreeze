@@ -1,6 +1,7 @@
 package gg.uhc.fancyfreeze;
 
 import com.google.common.collect.ImmutableList;
+import gg.uhc.fancyfreeze.api.CustomParticleEffect;
 import gg.uhc.fancyfreeze.api.Freezer;
 import gg.uhc.fancyfreeze.api.NMSHandler;
 import gg.uhc.fancyfreeze.commands.FreezeCommand;
@@ -10,9 +11,10 @@ import gg.uhc.fancyfreeze.listeners.InteractListeners;
 import gg.uhc.fancyfreeze.listeners.PortalListener;
 import gg.uhc.fancyfreeze.listeners.PotionListener;
 import gg.uhc.fancyfreeze.particles.ColouredDustParticleEffect;
-import gg.uhc.fancyfreeze.api.CustomParticleEffect;
 import gg.uhc.fancyfreeze.particles.RingParticleEffect;
+import gg.uhc.fancyfreeze.particles.SoundEffect;
 import gg.uhc.fancyfreeze.particles.VerticalSpreadParticleEffect;
+import org.bukkit.Sound;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -39,7 +41,9 @@ public class Entry extends JavaPlugin {
             return;
         }
 
-        freezer = new DefaultFreezer(this, handler.getFakePotionApplier(), handler.getMovementspeedRemover(), frozenEffect, maxDistance);
+        CustomParticleEffect warpEffect = new SoundEffect(Sound.ANVIL_LAND, 1, 0);
+
+        freezer = new DefaultFreezer(this, handler.getFakePotionApplier(), handler.getMovementspeedRemover(), frozenEffect, warpEffect, maxDistance);
 
         List<Listener> listeners = ImmutableList.<Listener>builder()
                 .add(freezer)

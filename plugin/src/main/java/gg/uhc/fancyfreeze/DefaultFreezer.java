@@ -37,6 +37,7 @@ public class DefaultFreezer implements Freezer {
     protected final Plugin plugin;
     protected final FakePotionApplier potionApplier;
     protected final CustomParticleEffect freezeEffect;
+    protected final CustomParticleEffect warpEffect;
     protected final MovementspeedRemover movementspeedRemover;
 
     protected final Set<UUID> alwaysFrozen = Sets.newHashSet();
@@ -46,11 +47,12 @@ public class DefaultFreezer implements Freezer {
 
     protected boolean globallyFrozen = false;
 
-    public DefaultFreezer(Plugin plugin, FakePotionApplier potionApplier, MovementspeedRemover movementspeedRemover, CustomParticleEffect freezeEffect, double maxDistance) {
+    public DefaultFreezer(Plugin plugin, FakePotionApplier potionApplier, MovementspeedRemover movementspeedRemover, CustomParticleEffect freezeEffect, CustomParticleEffect warpEffect, double maxDistance) {
         this.plugin = plugin;
         this.movementspeedRemover = movementspeedRemover;
         this.freezeEffect = freezeEffect;
         this.potionApplier = potionApplier;
+        this.warpEffect = warpEffect;
         this.maxDistanceSq = maxDistance * maxDistance;
 
         freezeEffects = ImmutableList.<PotionEffect>builder()
@@ -248,8 +250,9 @@ public class DefaultFreezer implements Freezer {
     }
 
     protected void warpPlayerBack(Player player, Location location) {
-        player.teleport(location);
+        player.teleport(location.clone().setDirection(player.getLocation().getDirection()));
         player.sendMessage(ChatColor.RED + "Stay within the boundary");
+        warpEffect.playAtLocation(player.getLocation(), player);
     }
 
     protected void startParticleSpawning(UUID uuid, Location centre) {
