@@ -5,17 +5,17 @@ author: ghowden/Eluinhost
 commands:
   ff:
     description: fancy freeze command
-    permission: uhc.freeze.command.player
+    permission: uhc.fancyfreeze.command.player
   ffg:
     description: fancy freeze global command
-    permission: uhc.freeze.command.global
+    permission: uhc.fancyfreeze.command.global
 permissions:
-  uhc.freeze.command.player:
+  uhc.fancyfreeze.command.player:
     description: usage of /ff command
     default: op
-  uhc.freeze.command.global:
+  uhc.fancyfreeze.command.global:
     description: usage of the /ffg command
     default: op
-  uhc.freeze.antifreeze:
+  uhc.fancyfreeze.antifreeze:
     description: player will not be frozen in /ff or /ffg
     default: op

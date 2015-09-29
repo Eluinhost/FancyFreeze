@@ -21,7 +21,7 @@ A player that is frozen will also be sent 'fake' potion effects depending on con
 blindness and mining fatigue. When they are unfrozen these potion effects are removed and any overwritten potion effects 
 are sent back to the player.
 
-Players with `uhc.freeze.antifreeze` (default op) will be unaffected by freeze commands
+Players with `uhc.fancyfreeze.antifreeze` (default op) will be unaffected by freeze commands
 
 # Commands
 
@@ -36,13 +36,13 @@ Freeze/unfreeze a specific player
 When a player is frozen with this method they will not be unfrozen with global unfreeze `/ffg` and will only be unfrozen
 via this command
 
-Permission: `uhc.freeze.command.player` default OP
+Permission: `uhc.fancyfreeze.command.player` default OP
 
 ## `/ffg [on|off]`
 
 Sets global freeze on/off. If on/off is not supplied it will toggle instead. All players are frozen + any new logins.
 
-Permission: `uhc.freeze.command.global` default OP
+Permission: `uhc.fancyfreeze.command.global` default OP
 
 # Configuration
 

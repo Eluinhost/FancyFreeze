@@ -27,7 +27,7 @@ import java.util.UUID;
 
 public class DefaultFreezer implements Freezer {
 
-    public static final String ANTIFREEZE = "uhc.freeze.antifreeze";
+    public static final String ANTIFREEZE = "uhc.fancyfreeze.antifreeze";
 
     protected static final String METADATA_KEY = "freeze location";
     protected static final String STAY_IN_BORDER = ChatColor.RED + "Stay close to your freeze position!";
