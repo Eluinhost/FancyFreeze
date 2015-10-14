@@ -116,7 +116,12 @@ public class Entry extends JavaPlugin {
 
         Plugin uhc = Bukkit.getPluginManager().getPlugin("UHC");
         if (uhc != null) {
-            UhcModule.hook(uhc, freezer);
+            try {
+                UhcModule.hook(uhc, freezer);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                getLogger().severe("Failed to hook in to the UHC plugin");
+            }
         }
     }
 
