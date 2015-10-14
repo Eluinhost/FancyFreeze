@@ -31,6 +31,7 @@ public class DefaultFreezer implements Freezer {
 
     protected static final String METADATA_KEY = "freeze location";
     protected static final String STAY_IN_BORDER = ChatColor.RED + "Stay close to your freeze position!";
+    protected static final double TAU = 2 * Math.PI;
 
     protected final Plugin plugin;
     protected final FreezePotionsApplier potionApplier;
@@ -242,7 +243,7 @@ public class DefaultFreezer implements Freezer {
         double dZ = playerLocation.getZ() - location.getZ();
         double theta = Math.atan2(-dX, dZ);
 
-        newLocation.setYaw((float)Math.toDegrees((theta + 6.283185307179586D) % 6.283185307179586D));
+        newLocation.setYaw((float)Math.toDegrees((theta + TAU) % TAU));
         newLocation.setPitch(playerLocation.getPitch());
 
         player.teleport(newLocation);
