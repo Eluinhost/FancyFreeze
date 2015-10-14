@@ -19,10 +19,13 @@ import gg.uhc.fancyfreeze.listeners.DamageListener;
 import gg.uhc.fancyfreeze.listeners.InteractListeners;
 import gg.uhc.fancyfreeze.listeners.PortalListener;
 import gg.uhc.fancyfreeze.listeners.PotionListener;
+import gg.uhc.fancyfreeze.uhc.UhcModule;
+import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
@@ -110,6 +113,11 @@ public class Entry extends JavaPlugin {
         // register commands
         getCommand("ff").setExecutor(new FreezeCommand(freezer));
         getCommand("ffg").setExecutor(new GlobalFreezeCommand(freezer));
+
+        Plugin uhc = Bukkit.getPluginManager().getPlugin("UHC");
+        if (uhc != null) {
+            UhcModule.hook(uhc, freezer);
+        }
     }
 
     public void onDisable() {

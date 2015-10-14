@@ -6,6 +6,10 @@ import com.google.common.collect.Sets;
 import gg.uhc.fancyfreeze.api.CustomEffect;
 import gg.uhc.fancyfreeze.api.Freezer;
 import gg.uhc.fancyfreeze.api.nms.MovementspeedRemover;
+import gg.uhc.fancyfreeze.events.GlobalFreezeEvent;
+import gg.uhc.fancyfreeze.events.GlobalUnfreezeEvent;
+import gg.uhc.fancyfreeze.events.PlayerFreezeEvent;
+import gg.uhc.fancyfreeze.events.PlayerUnfreezeEvent;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -127,6 +131,8 @@ public class DefaultFreezer implements Freezer {
                 freezePlayer(player);
             }
         }
+
+        Bukkit.getPluginManager().callEvent(new GlobalFreezeEvent());
     }
 
     @Override
@@ -141,6 +147,8 @@ public class DefaultFreezer implements Freezer {
                 unfreezePlayer(player);
             }
         }
+
+        Bukkit.getPluginManager().callEvent(new GlobalUnfreezeEvent());
     }
 
     @Override
@@ -225,6 +233,8 @@ public class DefaultFreezer implements Freezer {
         movementspeedRemover.applyReduction(player);
         potionApplier.addPotions(player);
         startParticleSpawning(player, player.getLocation());
+
+        Bukkit.getPluginManager().callEvent(new PlayerFreezeEvent(player));
     }
 
     protected void unfreezePlayer(Player player) {
@@ -232,6 +242,8 @@ public class DefaultFreezer implements Freezer {
         movementspeedRemover.removeReduction(player);
         potionApplier.removePotions(player);
         stopParticleSpawning(player);
+
+        Bukkit.getPluginManager().callEvent(new PlayerUnfreezeEvent(player));
     }
 
     protected void warpPlayerBack(Player player, Location location) {

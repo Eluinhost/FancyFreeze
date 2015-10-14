@@ -23,6 +23,9 @@ are sent back to the player.
 
 Players with `uhc.fancyfreeze.antifreeze` (default op) will be unaffected by freeze commands
 
+When the [UHC plugin](https://github.com/Eluinhost/UHC) is installed it will add an icon to `/addons` that when clicked
+will toggle global freeze
+
 # Commands
 
 ## `/ff <name> [on|off]`
