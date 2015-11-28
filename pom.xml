@@ -11,6 +11,13 @@
 
     <name>FancyFreeze Parent</name>
 
+    <licenses>
+        <license>
+            <name>MIT</name>
+            <url>LICENSE</url>
+        </license>
+    </licenses>
+
     <repositories>
         <repository>
             <id>spigot-repo</id>
