@@ -3,9 +3,9 @@ package gg.uhc.fancyfreeze.commands;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import gg.uhc.fancyfreeze.announcer.GlobalAnnouncer;
 import gg.uhc.fancyfreeze.api.Freezer;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -19,11 +19,12 @@ public class GlobalFreezeCommand implements TabExecutor {
     protected static final Set<String> ARGUMENTS = ImmutableSet.of("toggle", "on", "off");
 
     protected static final String USAGE = ChatColor.RED + "Usage: /ffg [on|off]";
-    protected static final String FROZEN = ChatColor.AQUA + "All players are now %s";
 
+    protected final GlobalAnnouncer announcer;
     protected final Freezer freezer;
 
-    public GlobalFreezeCommand(Freezer freezer) {
+    public GlobalFreezeCommand(GlobalAnnouncer announcer, Freezer freezer) {
+        this.announcer = announcer;
         this.freezer = freezer;
     }
 
@@ -35,17 +36,14 @@ public class GlobalFreezeCommand implements TabExecutor {
             type = args[0].toLowerCase();
         }
 
-        boolean frozen;
         switch (type) {
             case "toggle":
-                frozen = freezer.toggleGlobalFreeze();
+                freezer.toggleGlobalFreeze();
                 break;
             case "on":
-                frozen = true;
                 freezer.enableGlobalFreeze();
                 break;
             case "off":
-                frozen = false;
                 freezer.disableGlobalFreeze();
                 break;
             default:
@@ -53,7 +51,7 @@ public class GlobalFreezeCommand implements TabExecutor {
                 return true;
         }
 
-        Bukkit.broadcastMessage(String.format(FROZEN, frozen ? "frozen" : "unfrozen"));
+        announcer.announceState();
         return true;
     }
 

@@ -1,5 +1,7 @@
 package gg.uhc.fancyfreeze.uhc;
 
+import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import gg.uhc.fancyfreeze.api.Freezer;
 import gg.uhc.fancyfreeze.events.GlobalFreezeEvent;
 import gg.uhc.fancyfreeze.events.GlobalUnfreezeEvent;
@@ -10,45 +12,48 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
+import java.util.List;
+
 public class UhcModule extends DisableableModule implements Listener {
 
     protected static final String ICON_NAME = "Fancy Freeze";
 
     protected final Freezer freezer;
 
-    public static void hook(Plugin uhcPlugin, Freezer freezer) {
-        ((UHC) uhcPlugin).getRegistry().register(new UhcModule(freezer), "FancyFreeze");
+    public static Optional<UhcModule> hook(Plugin uhcPlugin, Freezer freezer) {
+        UhcModule module = new UhcModule(freezer);
+        boolean loaded = ((UHC) uhcPlugin).getRegistry().register(module);
+
+        if (loaded) return Optional.of(module);
+
+        return Optional.absent();
     }
 
     public UhcModule(Freezer freezer) {
         this.freezer = freezer;
+        setId("FancyFreeze");
 
         this.iconName = ICON_NAME;
         this.icon.setType(Material.INK_SACK);
         this.icon.setDurability((short) 4);
     }
 
-    @Override
-    public void rerender() {
-        super.rerender();
+    protected List<String> getEnabledLore() {
+        return Lists.newArrayList("Global freeze is enabled");
+    }
 
-        icon.setLore(isEnabled() ? "Global freeze is enabled" : "Global freeze is disabled");
+    protected List<String> getDisabledLore() {
+        return Lists.newArrayList("Global freeze is disabled");
     }
 
     @EventHandler
     public void on(GlobalFreezeEvent event) {
-        this.enabled = true;
-        this.config.set("enabled", Boolean.valueOf(true));
-        this.saveConfig();
-        rerender();
+        enable();
     }
 
     @EventHandler
     public void on(GlobalUnfreezeEvent event) {
-        this.enabled = false;
-        this.config.set("enabled", Boolean.valueOf(false));
-        this.saveConfig();
-        rerender();
+        disable();
     }
 
     @Override

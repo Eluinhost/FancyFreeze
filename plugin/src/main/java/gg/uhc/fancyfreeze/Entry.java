@@ -1,7 +1,10 @@
 package gg.uhc.fancyfreeze;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import gg.uhc.fancyfreeze.announcer.DefaultAnnouncer;
+import gg.uhc.fancyfreeze.announcer.GlobalAnnouncer;
 import gg.uhc.fancyfreeze.api.CustomEffect;
 import gg.uhc.fancyfreeze.api.Freezer;
 import gg.uhc.fancyfreeze.api.NMSHandler;
@@ -19,6 +22,7 @@ import gg.uhc.fancyfreeze.listeners.DamageListener;
 import gg.uhc.fancyfreeze.listeners.InteractListeners;
 import gg.uhc.fancyfreeze.listeners.PortalListener;
 import gg.uhc.fancyfreeze.listeners.PotionListener;
+import gg.uhc.fancyfreeze.uhc.UhcAnnouncer;
 import gg.uhc.fancyfreeze.uhc.UhcModule;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
@@ -110,19 +114,29 @@ public class Entry extends JavaPlugin {
             manager.registerEvents(listener, this);
         }
 
-        // register commands
-        getCommand("ff").setExecutor(new FreezeCommand(freezer));
-        getCommand("ffg").setExecutor(new GlobalFreezeCommand(freezer));
-
         Plugin uhc = Bukkit.getPluginManager().getPlugin("UHC");
+        GlobalAnnouncer announcer = null;
         if (uhc != null) {
             try {
-                UhcModule.hook(uhc, freezer);
+                Optional<UhcModule> module = UhcModule.hook(uhc, freezer);
+
+                if (module.isPresent()) {
+                    announcer = new UhcAnnouncer(module.get());
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
                 getLogger().severe("Failed to hook in to the UHC plugin");
             }
         }
+
+        // fallback to regular announcer if UHC isnt loaded e.t.c.
+        if (announcer == null) {
+            announcer = new DefaultAnnouncer(freezer);
+        }
+
+        // register commands
+        getCommand("ff").setExecutor(new FreezeCommand(freezer));
+        getCommand("ffg").setExecutor(new GlobalFreezeCommand(announcer, freezer));
     }
 
     public void onDisable() {

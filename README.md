@@ -23,8 +23,9 @@ are sent back to the player.
 
 Players with `uhc.fancyfreeze.antifreeze` (default op) will be unaffected by freeze commands
 
-When the [UHC plugin](https://github.com/Eluinhost/UHC) is installed it will add an icon to `/addons` that when clicked
-will toggle global freeze
+When the [UHC plugin](https://github.com/Eluinhost/UHC) is installed it will add an icon to `/uhc` that when clicked
+will toggle global freeze and `/ffg` will show messags using the UHC styles. Enabled status will also carry across 
+server reload/restarts.
 
 # Commands
 

@@ -11,13 +11,13 @@
 
     <artifactId>fancyfreeze</artifactId>
     <name>FancyFreeze</name>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 
     <dependencies>
         <dependency>
             <groupId>gg.uhc</groupId>
             <artifactId>uhc</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>1.1.0</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
