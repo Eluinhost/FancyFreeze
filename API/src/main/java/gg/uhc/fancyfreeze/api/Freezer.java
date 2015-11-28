@@ -21,5 +21,7 @@ public interface Freezer extends Listener {
 
     boolean isCurrentlyFrozen(UUID player);
 
+    boolean hasAntifreezePermission(UUID player);
+
     Set<Player> getOnlineFrozenPlayers();
 }

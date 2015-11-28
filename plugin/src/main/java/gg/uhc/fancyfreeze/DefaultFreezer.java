@@ -74,6 +74,8 @@ public class DefaultFreezer implements Freezer {
 
     @Override
     public void alwaysFreeze(UUID player) {
+        if (hasAntifreezePermission(player)) return;
+
         if (!alwaysFrozen.add(player)) return;
 
         // if it's global freeze atm skip freezing them
@@ -158,7 +160,12 @@ public class DefaultFreezer implements Freezer {
 
     @Override
     public boolean isCurrentlyFrozen(UUID player) {
-        return isGloballyFrozen() || isAlwaysFrozen(player);
+        return (isGloballyFrozen() || isAlwaysFrozen(player)) && !hasAntifreezePermission(player);
+    }
+
+    @Override
+    public boolean hasAntifreezePermission(UUID player) {
+        return Bukkit.getPlayer(player).hasPermission(ANTIFREEZE);
     }
 
     @Override
@@ -170,7 +177,7 @@ public class DefaultFreezer implements Freezer {
         Set<Player> online = Sets.newHashSet();
         for (UUID frozen : alwaysFrozen) {
             Player player = Bukkit.getPlayer(frozen);
-            if (player != null) online.add(player);
+            if (player != null && !player.hasPermission(ANTIFREEZE)) online.add(player);
         }
 
         return online;
@@ -178,7 +185,7 @@ public class DefaultFreezer implements Freezer {
 
     @EventHandler
     public void on(PlayerJoinEvent event) {
-        if (globallyFrozen || alwaysFrozen.contains(event.getPlayer().getUniqueId())) {
+        if (isCurrentlyFrozen(event.getPlayer().getUniqueId())) {
             freezePlayer(event.getPlayer());
         }
     }
