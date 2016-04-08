@@ -53,7 +53,6 @@ import gg.uhc.fancyfreeze.uhc.UhcAnnouncer;
 import gg.uhc.fancyfreeze.uhc.UhcModule;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
-import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -118,7 +117,7 @@ public class Entry extends JavaPlugin {
             frozenEffect = new VerticalSpreadEffect(ring, 4D, 6, -.5D);
 
             CustomEffect warpParticle = new ParticleEffect(Effect.VILLAGER_THUNDERCLOUD, 0, 0, 1, 1, 1, 0, 10, 30);
-            CustomEffect warpSound = new SoundEffect(Sound.ANVIL_LAND, 1, 0);
+            CustomEffect warpSound = new SoundEffect(handler.getWarpSound(), 1, 0);
             warpEffect = new CombinationEffect(warpParticle, warpSound);
         } else {
             frozenEffect = new DummyEffect();
@@ -187,6 +186,8 @@ public class Entry extends JavaPlugin {
                 return new gg.uhc.fancyfreeze.nms.v1_8_R2.NMSHandler();
             case "v1_8_R3":
                 return new gg.uhc.fancyfreeze.nms.v1_8_R3.NMSHandler();
+            case "v1_9_R1":
+                return new gg.uhc.fancyfreeze.nms.v1_9_R1.NMSHandler();
             default:
                 return null;
         }

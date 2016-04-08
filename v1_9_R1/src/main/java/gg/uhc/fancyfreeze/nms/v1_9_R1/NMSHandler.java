@@ -1,6 +1,6 @@
 /*
  * Project: FancyFreeze
- * Class: gg.uhc.fancyfreeze.nms.v1_8_R1.NMSHandler
+ * Class: gg.uhc.fancyfreeze.nms.v1_9_R1.NMSHandler
  *
  * The MIT License (MIT)
  *
@@ -25,7 +25,7 @@
  * THE SOFTWARE.
  */
 
-package gg.uhc.fancyfreeze.nms.v1_8_R1;
+package gg.uhc.fancyfreeze.nms.v1_9_R1;
 
 
 import org.bukkit.Sound;
@@ -52,6 +52,6 @@ public class NMSHandler implements gg.uhc.fancyfreeze.api.NMSHandler {
 
     @Override
     public Sound getWarpSound() {
-        return Sound.ANVIL_LAND;
+        return Sound.BLOCK_ANVIL_LAND;
     }
 }

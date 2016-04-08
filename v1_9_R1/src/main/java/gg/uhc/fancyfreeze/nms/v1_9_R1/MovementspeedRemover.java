@@ -1,6 +1,6 @@
 /*
  * Project: FancyFreeze
- * Class: gg.uhc.fancyfreeze.nms.v1_8_R1.NMSHandler
+ * Class: gg.uhc.fancyfreeze.nms.v1_9_R1.MovementspeedRemover
  *
  * The MIT License (MIT)
  *
@@ -25,33 +25,25 @@
  * THE SOFTWARE.
  */
 
-package gg.uhc.fancyfreeze.nms.v1_8_R1;
+package gg.uhc.fancyfreeze.nms.v1_9_R1;
 
+import net.minecraft.server.v1_9_R1.AttributeModifier;
+import net.minecraft.server.v1_9_R1.GenericAttributes;
+import org.bukkit.craftbukkit.v1_9_R1.entity.CraftLivingEntity;
+import org.bukkit.entity.LivingEntity;
 
-import org.bukkit.Sound;
+public class MovementspeedRemover implements gg.uhc.fancyfreeze.api.nms.MovementspeedRemover {
 
-public class NMSHandler implements gg.uhc.fancyfreeze.api.NMSHandler {
+    // a is setSaved(Boolean)
+    protected static final AttributeModifier FREEZE_MODIFIER = new AttributeModifier("Frozen entity", -100, 2).a(false);
 
-    protected final FakePotionApplier potionApplier;
-    protected final MovementspeedRemover movementspeedRemover;
-
-    public NMSHandler() {
-        potionApplier = new FakePotionApplier();
-        movementspeedRemover = new MovementspeedRemover();
+    @Override
+    public void applyReduction(LivingEntity entity) {
+        ((CraftLivingEntity) entity).getHandle().getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).b(FREEZE_MODIFIER);
     }
 
     @Override
-    public FakePotionApplier getFakePotionApplier() {
-        return potionApplier;
-    }
-
-    @Override
-    public MovementspeedRemover getMovementspeedRemover() {
-        return movementspeedRemover;
-    }
-
-    @Override
-    public Sound getWarpSound() {
-        return Sound.ANVIL_LAND;
+    public void removeReduction(LivingEntity entity) {
+        ((CraftLivingEntity) entity).getHandle().getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).c(FREEZE_MODIFIER);
     }
 }
