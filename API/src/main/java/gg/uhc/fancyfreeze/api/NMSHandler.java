@@ -29,8 +29,10 @@ package gg.uhc.fancyfreeze.api;
 
 import gg.uhc.fancyfreeze.api.nms.FakePotionApplier;
 import gg.uhc.fancyfreeze.api.nms.MovementspeedRemover;
+import org.bukkit.Sound;
 
 public interface NMSHandler {
     FakePotionApplier getFakePotionApplier();
     MovementspeedRemover getMovementspeedRemover();
+    Sound getWarpSound();
 }

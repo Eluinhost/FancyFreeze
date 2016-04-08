@@ -28,6 +28,8 @@
 package gg.uhc.fancyfreeze.nms.v1_9_R1;
 
 
+import org.bukkit.Sound;
+
 public class NMSHandler implements gg.uhc.fancyfreeze.api.NMSHandler {
 
     protected final FakePotionApplier potionApplier;
@@ -46,5 +48,10 @@ public class NMSHandler implements gg.uhc.fancyfreeze.api.NMSHandler {
     @Override
     public MovementspeedRemover getMovementspeedRemover() {
         return movementspeedRemover;
+    }
+
+    @Override
+    public Sound getWarpSound() {
+        return Sound.BLOCK_ANVIL_LAND;
     }
 }

@@ -28,6 +28,7 @@
 package gg.uhc.fancyfreeze.nms.v1_9_R1;
 
 import net.minecraft.server.v1_9_R1.MobEffect;
+import net.minecraft.server.v1_9_R1.MobEffectList;
 import net.minecraft.server.v1_9_R1.PacketPlayOutEntityEffect;
 import net.minecraft.server.v1_9_R1.PacketPlayOutRemoveEntityEffect;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
@@ -61,7 +62,7 @@ public class FakePotionApplier implements gg.uhc.fancyfreeze.api.nms.FakePotionA
 
     protected MobEffect effectFromPotionEffect(PotionEffect effect) {
         return new MobEffect(
-                effect.getType().getId(),
+                MobEffectList.fromId(effect.getType().getId()),
                 effect.getDuration(),
                 effect.getAmplifier(),
                 effect.isAmbient(),
@@ -75,7 +76,7 @@ public class FakePotionApplier implements gg.uhc.fancyfreeze.api.nms.FakePotionA
     }
 
     protected void removeEffect(Player player, MobEffect effect) {
-        PacketPlayOutRemoveEntityEffect removeEffect = new PacketPlayOutRemoveEntityEffect(player.getEntityId(), effect);
+        PacketPlayOutRemoveEntityEffect removeEffect = new PacketPlayOutRemoveEntityEffect(player.getEntityId(), effect.getMobEffect());
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(removeEffect);
     }
 }
