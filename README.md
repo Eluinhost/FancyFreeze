@@ -1,6 +1,8 @@
 FancyFreeze
 ===========
 
+Supports 1.8 R1-3 and 1.9 R1-2
+
 Fancy freeze commands.  
 
 A frozen player cannot:

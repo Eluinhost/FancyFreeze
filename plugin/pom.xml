@@ -31,6 +31,14 @@
         </dependency>
         <dependency>
             <groupId>gg.uhc</groupId>
+            <artifactId>fancyfreeze-nms-v1_9_R2</artifactId>
+            <version>v1_9_R2</version>
+            <type>jar</type>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>gg.uhc</groupId>
             <artifactId>fancyfreeze-nms-v1_9_R1</artifactId>
             <version>v1_9_R1</version>
             <type>jar</type>
