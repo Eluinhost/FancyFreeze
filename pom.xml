@@ -23,6 +23,14 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+        <repository>
+            <id>uhcgg-snapshot-local</id>
+            <url>http://repo.uhc.gg/ext-snapshot-local/</url>
+        </repository>
+        <repository>
+            <id>uhcgg-libs-release-local</id>
+            <url>http://repo.uhc.gg/libs-release-local/</url>
+        </repository>
     </repositories>
 
     <modules>
