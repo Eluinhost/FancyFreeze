@@ -190,6 +190,8 @@ public class Entry extends JavaPlugin {
                 return new gg.uhc.fancyfreeze.nms.v1_9_R1.NMSHandler();
             case "v1_9_R2":
                 return new gg.uhc.fancyfreeze.nms.v1_9_R2.NMSHandler();
+            case "v1_10_R1":
+                return new gg.uhc.fancyfreeze.nms.v1_10_R1.NMSHandler();
             default:
                 return null;
         }
