@@ -18,14 +18,23 @@
         </license>
     </licenses>
 
+    <distributionManagement>
+        <repository>
+            <id>uhcgg-releases</id>
+            <name>uhc.gg-releases</name>
+            <url>http://repo.uhc.gg/libs-release-local</url>
+        </repository>
+        <snapshotRepository>
+            <id>uhcgg-snapshots</id>
+            <name>uhc.gg-snapshots</name>
+            <url>http://repo.uhc.gg/libs-snapshot-local</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <repositories>
         <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-        <repository>
-            <id>uhcgg-snapshot-local</id>
-            <url>http://repo.uhc.gg/ext-snapshot-local/</url>
         </repository>
         <repository>
             <id>uhcgg-libs-release-local</id>
@@ -42,6 +51,7 @@
         <module>v1_9_R1</module>
         <module>v1_9_R2</module>
         <module>v1_10_R1</module>
+        <module>v1_12_R1</module>
     </modules>
 
     <build>

@@ -1,7 +1,7 @@
 FancyFreeze
 ===========
 
-Supports Spigot 1.8 R1-3, 1.9 R1-2 and 1.10 R1
+Supports Spigot 1.8 R1-3, 1.9 R1-2, 1.10 R1 and 1.12.2
 
 Fancy freeze commands.  
 
